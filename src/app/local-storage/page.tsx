@@ -1,19 +1,20 @@
-import * as React from "react";
+"use client";
+import React, { useState } from "react";
 import { useStorageStore } from "@/store/useStorageStore";
 import { localStorageUtil } from "@/utils/localStorageUtil";
 import ProgressBar from "@/components/ProgressBar";
 import SpeedChart from "@/components/SpeedChart";
 
-const LocalStoragePage = () => {
+export default function LocalStoragePage() {
   const {
     uploadProgress,
     downloadProgress,
     setUploadProgress,
     setDownloadProgress,
   } = useStorageStore();
-  const [speedData, setSpeedData] = React.useState<
-    { time: number; speed: number }[]
-  >([]);
+  const [speedData, setSpeedData] = useState<{ time: number; speed: number }[]>(
+    []
+  );
 
   const handleUpload = () => {
     const data = JSON.stringify({
@@ -27,7 +28,7 @@ const LocalStoragePage = () => {
   const handleDownload = () => {
     const { data, time } = localStorageUtil.retrieveData("testKey");
     if (data) {
-      alert(`Retrieved Data: ${data}`); // Show data in an alert or use it in the UI
+      alert(`Retrieved Data: ${data}`);
     }
     setDownloadProgress(100);
     setSpeedData([...speedData, { time: Date.now(), speed: time }]);
@@ -76,6 +77,4 @@ const LocalStoragePage = () => {
       </div>
     </div>
   );
-};
-
-export default LocalStoragePage;
+}
