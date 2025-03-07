@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   BarChart,
@@ -11,81 +11,35 @@ import {
   Legend,
 } from "recharts";
 
-const storageData = [
-  {
-    name: "Local Storage",
-    speed: "Fast",
-    limit: 5,
-    displayLimit: "5MB",
-    async: "Synchronous",
-    support: "✅ Fully Supported",
-  },
-  {
-    name: "Session Storage",
-    speed: "Fast",
-    limit: 5,
-    displayLimit: "5MB",
-    async: "Synchronous",
-    support: "✅ Fully Supported",
-  },
-  {
-    name: "IndexedDB",
-    speed: "Moderate",
-    limit: 100,
-    displayLimit: "Unlimited (Quota Managed)",
-    async: "Asynchronous",
-    support: "✅ Fully Supported",
-  },
-  {
-    name: "Cache Storage",
-    speed: "Fast",
-    limit: 100,
-    displayLimit: "Unlimited (Quota Managed)",
-    async: "Asynchronous",
-    support: "✅ Fully Supported",
-  },
-  {
-    name: "File System API",
-    speed: "Fast",
-    limit: 100,
-    displayLimit: "Unlimited (Quota Managed)",
-    async: "Asynchronous",
-    support: "⚠️ Partial Support",
-  },
-];
-
 export default function HomePage() {
-  const [mounted, setMounted] = useState(false);
+  const [homeData, setHomeData] = useState<any>(null);
 
   useEffect(() => {
-    setMounted(true);
+    fetch("/api/home")
+      .then((res) => res.json())
+      .then((data) => setHomeData(data))
+      .catch((err) => console.error("Error fetching home page data:", err));
   }, []);
 
-  if (!mounted) return null;
+  if (!homeData) {
+    return (
+      <div className="p-6 text-gray-100 bg-gray-900 min-h-screen">
+        Loading...
+      </div>
+    );
+  }
 
   return (
     <div className="p-6 text-gray-100 bg-gray-900 min-h-screen">
-      <h1 className="text-3xl font-bold">Web Storage API Comparison</h1>
-      <p className="mt-2 text-gray-300">
-        Explore different web storage APIs, their limitations, and browser
-        support.
-      </p>
+      <h1 className="text-3xl font-bold">{homeData.title}</h1>
+      <p className="mt-2 text-gray-300">{homeData.description}</p>
 
-      <div className="mt-6">
-        <h2 className="text-2xl font-semibold">Storage Limits (MB)</h2>
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={storageData} barGap={8} barSize={50}>
-            <XAxis dataKey="name" stroke="#E5E7EB" />
-            <YAxis stroke="#E5E7EB" />
-            <Tooltip
-              contentStyle={{ backgroundColor: "#1F2937", color: "#E5E7EB" }}
-              cursor={{ fill: "transparent" }}
-            />
-            <Legend />
-            <Bar dataKey="limit" fill="#6366F1" radius={[10, 10, 0, 0]} />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
+      {homeData.sections?.map((section: any, index: number) => (
+        <div key={index} className="mt-6">
+          <h2 className="text-2xl font-semibold">{section.title}</h2>
+          <p className="mt-2 text-gray-300">{section.text}</p>
+        </div>
+      ))}
 
       <div className="mt-6">
         <h2 className="text-2xl font-semibold">Comparison Table</h2>
@@ -94,20 +48,17 @@ export default function HomePage() {
             <tr className="bg-gray-700 text-gray-200">
               <th className="border p-2">Storage API</th>
               <th className="border p-2">Speed</th>
-              <th className="border p-2">Max Limit</th>
-              <th className="border p-2">Sync/Async</th>
-              <th className="border p-2">Browser Support</th>
+              <th className="border p-2">Limit</th>
+              <th className="border p-2">Async</th>
+              <th className="border p-2">Support</th>
             </tr>
           </thead>
           <tbody>
-            {storageData.map((storage) => (
-              <tr
-                key={storage.name}
-                className="text-center border-b last:border-none"
-              >
+            {homeData.comparisonTable?.map((storage: any, index: number) => (
+              <tr key={index} className="text-center border-b last:border-none">
                 <td className="border p-2">{storage.name}</td>
                 <td className="border p-2">{storage.speed}</td>
-                <td className="border p-2">{storage.displayLimit}</td>
+                <td className="border p-2">{storage.limit}</td>
                 <td className="border p-2">{storage.async}</td>
                 <td className="border p-2">{storage.support}</td>
               </tr>
@@ -121,7 +72,7 @@ export default function HomePage() {
         <ul className="mt-2 list-disc list-inside">
           <li>
             <Link
-              href="/local-storage"
+              href="/storage/local-storage"
               className="text-blue-400 hover:underline"
             >
               Local Storage
@@ -129,20 +80,23 @@ export default function HomePage() {
           </li>
           <li>
             <Link
-              href="/session-storage"
+              href="/storage/session-storage"
               className="text-blue-400 hover:underline"
             >
               Session Storage
             </Link>
           </li>
           <li>
-            <Link href="/indexeddb" className="text-blue-400 hover:underline">
+            <Link
+              href="/storage/indexeddb"
+              className="text-blue-400 hover:underline"
+            >
               IndexedDB
             </Link>
           </li>
           <li>
             <Link
-              href="/cache-storage"
+              href="/storage/cache-storage"
               className="text-blue-400 hover:underline"
             >
               Cache Storage
@@ -150,7 +104,7 @@ export default function HomePage() {
           </li>
           <li>
             <Link
-              href="/file-system-storage"
+              href="/storage/file-system"
               className="text-blue-400 hover:underline"
             >
               File System Storage
@@ -159,45 +113,40 @@ export default function HomePage() {
         </ul>
       </div>
 
+      <div className="mt-6">
+        <h2 className="text-2xl font-semibold">Storage Limits (MB)</h2>
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart
+            data={homeData.comparisonTable || []}
+            barGap={8}
+            barSize={50}
+          >
+            <XAxis dataKey="name" stroke="#E5E7EB" />
+            <YAxis stroke="#E5E7EB" domain={[0, 100]} />
+            <Tooltip
+              contentStyle={{ backgroundColor: "#1F2937", color: "#E5E7EB" }}
+              cursor={{ fill: "transparent" }}
+            />
+            <Legend />
+            <Bar dataKey="limit" fill="#6366F1" radius={[10, 10, 0, 0]} />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+
       <div className="mt-8 text-sm text-gray-400">
         <h2 className="text-lg font-semibold">Sources:</h2>
         <ul className="list-disc list-inside">
-          <li>
-            <a
-              href="https://en.wikipedia.org/wiki/Web_storage"
-              className="text-blue-400 hover:underline"
-              target="_blank"
-            >
-              Wikipedia - Web Storage
-            </a>
-          </li>
-          <li>
-            <a
-              href="https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage"
-              className="text-blue-400 hover:underline"
-              target="_blank"
-            >
-              MDN - localStorage
-            </a>
-          </li>
-          <li>
-            <a
-              href="https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage"
-              className="text-blue-400 hover:underline"
-              target="_blank"
-            >
-              MDN - sessionStorage
-            </a>
-          </li>
-          <li>
-            <a
-              href="https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API"
-              className="text-blue-400 hover:underline"
-              target="_blank"
-            >
-              MDN - IndexedDB API
-            </a>
-          </li>
+          {homeData.sources?.map((source: any, index: number) => (
+            <li key={index}>
+              <a
+                href={source.url}
+                className="text-blue-400 hover:underline"
+                target="_blank"
+              >
+                {source.name}
+              </a>
+            </li>
+          ))}
         </ul>
       </div>
     </div>
