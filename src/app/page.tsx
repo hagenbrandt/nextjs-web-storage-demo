@@ -116,13 +116,9 @@ export default function HomePage() {
       <div className="mt-6">
         <h2 className="text-2xl font-semibold">Storage Limits (MB)</h2>
         <ResponsiveContainer width="100%" height={300}>
-          <BarChart
-            data={homeData.comparisonTable || []}
-            barGap={8}
-            barSize={50}
-          >
+          <BarChart data={homeData.comparisonTable} barGap={8} barSize={50}>
             <XAxis dataKey="name" stroke="#E5E7EB" />
-            <YAxis stroke="#E5E7EB" domain={[0, 100]} />
+            <YAxis stroke="#E5E7EB" />
             <Tooltip
               contentStyle={{ backgroundColor: "#1F2937", color: "#E5E7EB" }}
               cursor={{ fill: "transparent" }}
