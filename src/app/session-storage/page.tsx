@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 import ProgressBar from "@/components/ProgressBar";
 import SpeedChart from "@/components/SpeedChart";
