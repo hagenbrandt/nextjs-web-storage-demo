@@ -4,7 +4,6 @@ import { useStorageStore } from "@/store/useStorageStore";
 import ProgressBar from "@/components/ProgressBar";
 import SpeedChart from "@/components/SpeedChart";
 
-// Ensure TypeScript recognizes the File System API
 declare global {
   interface Window {
     showSaveFilePicker?: () => Promise<FileSystemFileHandle>;
@@ -84,11 +83,42 @@ export default function FileSystemStoragePage() {
   };
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold">File System Storage</h1>
-      <p className="mt-2">
+    <div className="p-6 text-gray-100 bg-gray-900 min-h-screen">
+      <h1 className="text-3xl font-bold">File System Storage API</h1>
+      <p className="mt-2 text-gray-300">
         Upload, edit, and save text files using the File System Access API.
       </p>
+
+      <h2 className="text-2xl font-semibold mt-6">Overview</h2>
+      <p className="mt-2">
+        The File System API allows web applications to **read, write, and manage
+        files** directly from the user's device.
+      </p>
+
+      <h2 className="text-2xl font-semibold mt-6">Pros & Cons</h2>
+      <ul className="list-disc list-inside mt-2">
+        <li>
+          <strong>Pros:</strong> Enables direct file manipulation, persistent
+          storage, supports large files.
+        </li>
+        <li>
+          <strong>Cons:</strong> Limited browser support, requires user
+          permission, API is asynchronous.
+        </li>
+      </ul>
+
+      <h2 className="text-2xl font-semibold mt-6">How to Test Manually</h2>
+      <p className="mt-2">
+        To manually test the File System API, follow these steps:
+      </p>
+      <ol className="list-decimal list-inside mt-2">
+        <li>Click **Upload File** and select a file from your system.</li>
+        <li>Edit the file contents in the text box.</li>
+        <li>
+          Click **Save File** to write the modified content to your system.
+        </li>
+        <li>Check the saved file on your device.</li>
+      </ol>
 
       <div className="mt-4 space-x-2">
         <button
@@ -111,7 +141,7 @@ export default function FileSystemStoragePage() {
             );
             if (fileType) setSelectedFileType(fileType);
           }}
-          className="px-4 py-2 border rounded-lg"
+          className="px-4 py-2 border rounded-lg bg-gray-800 text-gray-300"
         >
           {fileTypes.map((type) => (
             <option key={type.value} value={type.value}>
@@ -123,7 +153,7 @@ export default function FileSystemStoragePage() {
 
       {fileText && (
         <textarea
-          className="w-full h-64 p-2 mt-4 border rounded-lg"
+          className="w-full h-64 p-2 mt-4 border rounded-lg bg-gray-800 text-gray-300 border-gray-600"
           value={fileText}
           onChange={handleEdit}
         />
