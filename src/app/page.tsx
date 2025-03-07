@@ -12,19 +12,46 @@ import {
 } from "recharts";
 
 const storageData = [
-  { name: "Local Storage", limit: 10 },
-  { name: "Session Storage", limit: 10 },
-  { name: "IndexedDB", limit: 100 },
-  { name: "Cache Storage", limit: 100 },
-  { name: "File System API", limit: 100 },
-];
-
-const browserSupport = [
-  { name: "Local Storage", support: "✅ Fully Supported" },
-  { name: "Session Storage", support: "✅ Fully Supported" },
-  { name: "IndexedDB", support: "✅ Fully Supported" },
-  { name: "Cache Storage", support: "✅ Fully Supported" },
-  { name: "File System API", support: "⚠️ Partial Support" },
+  {
+    name: "Local Storage",
+    speed: "Fast",
+    limit: 5,
+    displayLimit: "5MB",
+    async: "Synchronous",
+    support: "✅ Fully Supported",
+  },
+  {
+    name: "Session Storage",
+    speed: "Fast",
+    limit: 5,
+    displayLimit: "5MB",
+    async: "Synchronous",
+    support: "✅ Fully Supported",
+  },
+  {
+    name: "IndexedDB",
+    speed: "Moderate",
+    limit: 100,
+    displayLimit: "Unlimited (Quota Managed)",
+    async: "Asynchronous",
+    support: "✅ Fully Supported",
+  },
+  {
+    name: "Cache Storage",
+    speed: "Fast",
+    limit: 100,
+    displayLimit: "Unlimited (Quota Managed)",
+    async: "Asynchronous",
+    support: "✅ Fully Supported",
+  },
+  {
+    name: "File System API",
+    speed: "Fast",
+    limit: 100,
+    displayLimit: "Unlimited (Quota Managed)",
+    async: "Asynchronous",
+    support: "⚠️ Partial Support",
+  },
 ];
 
 export default function HomePage() {
@@ -61,21 +88,27 @@ export default function HomePage() {
       </div>
 
       <div className="mt-6">
-        <h2 className="text-2xl font-semibold">Browser Support</h2>
+        <h2 className="text-2xl font-semibold">Comparison Table</h2>
         <table className="w-full border mt-4 bg-gray-800 text-gray-100 shadow-md rounded-lg">
           <thead>
             <tr className="bg-gray-700 text-gray-200">
               <th className="border p-2">Storage API</th>
-              <th className="border p-2">Supported</th>
+              <th className="border p-2">Speed</th>
+              <th className="border p-2">Max Limit</th>
+              <th className="border p-2">Sync/Async</th>
+              <th className="border p-2">Browser Support</th>
             </tr>
           </thead>
           <tbody>
-            {browserSupport.map((storage) => (
+            {storageData.map((storage) => (
               <tr
                 key={storage.name}
                 className="text-center border-b last:border-none"
               >
                 <td className="border p-2">{storage.name}</td>
+                <td className="border p-2">{storage.speed}</td>
+                <td className="border p-2">{storage.displayLimit}</td>
+                <td className="border p-2">{storage.async}</td>
                 <td className="border p-2">{storage.support}</td>
               </tr>
             ))}
