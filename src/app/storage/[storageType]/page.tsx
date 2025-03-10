@@ -237,7 +237,7 @@ export default function StoragePage() {
       <p className="mt-2 text-gray-300">{storageData.description}</p>
 
       <h2 className="text-2xl font-semibold mt-6">Pros & Cons</h2>
-      <ul className="list-disc list-inside mt-2">
+      <ul className="list-none list-inside mt-2">
         {storageData.pros.map((pro) => (
           <li key={pro} className="text-green-400">
             ✔ {pro}
